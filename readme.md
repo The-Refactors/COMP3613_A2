@@ -20,7 +20,7 @@ def create_user_command(username, password, role):
     print(f'{username} created with role {role}')
 ```
 
-##List users
+## List users
 Lists all user in the database(optionally as json format)
 
 ```bash
@@ -37,7 +37,7 @@ def list_user_command(format):
         print(get_all_users_json())
 ```
 
-##View allocated courses for a chosen user
+## View allocated courses for a chosen user
 Presents a list of non admin users in the database. A user id is input and a list of courses to which the user has been allocated is shown
 
 ```bash
@@ -60,7 +60,7 @@ def view_user_allocates_command():
     print(course_list)
 ```
 
-##Update user’s name
+## Update user’s name
 Updates the username of the user given by the entered id to the new name given
 
 ```bash
@@ -78,7 +78,7 @@ def update_user_name_command(id, newname):
         print("Name unchanged")
 ```
 
-##Update user’s role
+## Update user’s role
 Updates the role of the user given by the entered id to the new role given
 
 ```bash
@@ -96,8 +96,8 @@ def update_user_role_command(id, newrole):
         print("Role unchanged")
 ```
 
-#Course Group Commands
-##Create course
+# Course Group Commands
+## Create course
 Creates a new course with the attributes specified
 
 ```bash
@@ -115,7 +115,7 @@ def create_course_command(coursecode, coursename, semester, year):
     print(f'{coursecode} - {coursename} created for {year} semester {semester}')
 ```
 
-##List courses
+## List courses
 Lists all courses in the database in json format
 
 ```bash
@@ -128,7 +128,7 @@ def list_course_command():
     print(get_all_courses_json())
 ```
 
-##View allocated users to a course
+## View allocated users to a course
 Presents a list of courses in the database. A course id is input and a list of users to which the course has been allocated is shown
 
 ```bash
@@ -149,7 +149,7 @@ def view_course_allocates_command():
     print(staff_list)
 ```
 
-##Update course information
+## Update course information
 Presents a list of courses in the database. A course id is input and a selection of attributes is shown. The selection is input, then the new content of the attribute is entered
 
 ```bash
@@ -182,8 +182,8 @@ def update_course_command():
     print(selected_course.get_json())
 ```
 
-#Allocate Group Commands
-##Allocate user to a course
+# Allocate Group Commands
+## Allocate user to a course
 Presents a list of non admin users in the database. A user id is input then a list of courses is shown. A course id is input which creates the allocation
 
 ```bash
@@ -220,7 +220,7 @@ def create_allocate_user_command():
         print(f'{selected_staff.username} was not allocated to {selected_course.courseCode}')
 ```
 
-##Allocate course to a user
+## Allocate course to a user
 Presents a list of courses in the database. A course id is input then a list of non admin users is shown. A user id is input which creates the allocation
 
 ```bash
@@ -258,7 +258,7 @@ def create_allocate_course_command():
         print(f'{selected_staff.username} was not allocated to {selected_course.courseCode}')
 ```
 
-##List allocations
+## List allocations
 List all allocations in the database in json format
 
 ```bash
@@ -272,7 +272,7 @@ def list_allocate_command():
     print(allocations)
 ```
 
-##Remove an allocation
+## Remove an allocation
 Presents a list of all allocations in the database. An allocation id is input and the corresponding entry is deleted
 
 ```bash
