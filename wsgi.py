@@ -3,9 +3,9 @@ from flask import Flask
 from flask.cli import with_appcontext, AppGroup
 
 from App.database import db, get_migrate
-from App.models import User
+from App.models import User, Course, Allocation
 from App.main import create_app
-from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
+from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize, )
 
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -33,9 +33,10 @@ user_cli = AppGroup('user', help='User object commands')
 @user_cli.command("create", help="Creates a user")
 @click.argument("username", default="rob")
 @click.argument("password", default="robpass")
-def create_user_command(username, password):
-    create_user(username, password)
-    print(f'{username} created!')
+@click.argument("role", default="admin")
+def create_user_command(username, password, role):
+    create_user(username, password, role)
+    print(f'{username} created with role {role}')
 
 # this command will be : flask user create bob bobpass
 
@@ -48,6 +49,20 @@ def list_user_command(format):
         print(get_all_users_json())
 
 app.cli.add_command(user_cli) # add the group to the cli
+
+
+course_cli = AppGroup('course', help='User object commands')
+
+@user_cli.command("create", help="Creates a course")
+@click.argument("courseCode", default="COMP3613")
+@click.argument("courseName", default="Software Engineering II")
+@click.argument("semester", default="1")
+@click.argument("year", default="2024")
+def create_course_command(courseCode, courseName, semester, year):
+    create_course(courseCode, courseName, semester, year)
+    print(f'{courseCode} - {courseName} created for {year} semester {semester}')
+
+app.cli.add_command(course_cli) # add the group to the cli
 
 '''
 Test Commands
