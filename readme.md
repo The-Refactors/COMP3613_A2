@@ -1,6 +1,6 @@
-#Flask Commands
-#User Group Commands
-##Create user
+# Flask Commands
+# User Group Commands
+## Create user
 Creates a new user with the specified username, password and role(admin by default)
 
 ```bash
