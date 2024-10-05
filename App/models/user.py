@@ -40,15 +40,6 @@ class Admin(User):
     __mapper_args__ = {
         'polymorphic_identity': 'admin'
     }
-    
-    def assign_staff(self):
-        pass
-
-    def create_staff(self):
-        pass
-
-    def create_course(self):
-        pass
 
 class Staff(User):
     __tablename__ = 'staff'
@@ -60,6 +51,3 @@ class Staff(User):
     def __init__(self, username, password, role):
         super().__init__(username, password)
         self.role = role
-    
-    def view_courses(self):
-        pass

@@ -53,5 +53,3 @@ def update_user_role(id, newrole):
         db.session.commit()
         return True
     return False
-
-    
