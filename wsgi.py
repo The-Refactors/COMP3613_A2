@@ -170,9 +170,7 @@ def create_allocate_user_command():
         print(f'{selected_staff.username} was not allocated to {selected_course.courseCode}')
 
     
-@allocate_cli.command("list", help="Lists allocations in the database")
-def list_allocate_command():
-    allocat@allocate_cli.command("course", help="Allocates a course to a user")
+@allocate_cli.command("course", help="Allocates a course to a user")
 def create_allocate_course_command():
     courses = get_all_courses_json()
     print (courses)
@@ -197,7 +195,10 @@ def create_allocate_course_command():
         print(f'{selected_staff.username} allocated to {selected_course.courseCode}')
     else:
         print(f'{selected_staff.username} was not allocated to {selected_course.courseCode}')
-ions = get_all_allocates_json()
+
+@allocate_cli.command("list", help="Lists allocations in the database")
+def list_allocate_command():
+    allocations = get_all_allocates_json()
     print(allocations)
 
 @allocate_cli.command("remove", help="Removes allocation entry from database")
