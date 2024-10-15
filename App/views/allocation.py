@@ -67,9 +67,6 @@ def get_edit_allocation_view():
 @jwt_required()
 def delete_allocation_view(id):
     success = delete_allocate(id)
-    response = redirect(request.referrer)
     if success:
-        flash('Allocation deleted successfully'), 200
-    else:
-        flash('Allocation not found'), 404
-    return response
+        return jsonify({'message':'Allocation deleted successfully'}), 200
+    return jsonify({'message': 'Allocation not found'}), 404
