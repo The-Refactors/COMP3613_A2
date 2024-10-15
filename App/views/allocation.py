@@ -64,28 +64,14 @@ def get_edit_allocation_view():
         })
     return jsonify(table_info), 200
 
-# Route to get allocations by staff ID
-@allocation_views.route('/allocationcreate/<int:staff_id>', methods=['GET'])
-def get_allocations_by_staff_view(staff_id):
-    allocations = get_allocates_by_staff(staff_id)
-    if not allocations:
-        return jsonify({'message': 'No allocations found for this staff member.'}), 404
-    allocations_json = [allocation.get_json() for allocation in allocations]
-    return jsonify(allocations_json), 200
-
-# Route to get a single allocation by ID
-@allocation_views.route('/allocation/<int:id>', methods=['GET'])
-def get_allocation_view(id):
-    allocation = get_allocate(id)
-    if not allocation:
-        return jsonify({'message': 'Allocation not found.'}), 404
-    return jsonify(allocation.get_json()), 200
-
 # Route to delete an allocation by ID
-@allocation_views.route('/allocation/<int:id>', methods=['DELETE'])
+@allocation_views.route('/allocationdelete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_allocation_view(id):
     success = delete_allocate(id)
+    response = redirect(request.referrer)
     if success:
-        return jsonify({'message': 'Allocation deleted successfully.'}), 200
+        flash('Allocation deleted successfully'), 200
     else:
-        return jsonify({'message': 'Allocation not found.'}), 404
+        flash('Allocation not found'), 404
+    return response
