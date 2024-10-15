@@ -5,8 +5,6 @@ from.index import index_views
 from App.controllers import (
     create_allocation,
     get_all_allocates_json,
-    get_allocates_by_staff,
-    get_allocate,
     delete_allocate,
     get_all_staff_json,
     get_all_courses_json
