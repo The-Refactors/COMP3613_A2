@@ -1,13 +1,13 @@
 from App.models.allocation import *
 from App.database import db
 
-def create_allocation(course_id, staff_id):
-    allocate_check = Allocation.query.filter_by(course_id=course_id, staff_id=staff_id).first()
+def create_allocation(course_id, staff_id, role):
+    allocate_check = Allocation.query.filter_by(course_id=course_id, staff_id=staff_id, role=role).first()
     if not allocate_check:
-        newallocation = Allocation(course_id=course_id, staff_id=staff_id)
+        newallocation = Allocation(course_id=course_id, staff_id=staff_id, role=role)
         db.session.add(newallocation)
         db.session.commit()
-        return True
+        return newallocation
     return False
 
 def get_all_allocates_json():
@@ -17,16 +17,52 @@ def get_all_allocates_json():
     allocates = [allocate.get_json() for allocate in allocates]
     return allocates
 
-def get_allocates_by_staff(id):
-    return Allocation.query.filter_by(staff_id=id).all()
+def get_allocates_by_course(course_id):
+    allocates = Allocation.query.filter_by(course_id=course_id).all()
+    return allocates
+
+def get_allocates_by_course_json(course_id):
+    allocates = Allocation.query.filter_by(course_id=course_id).all()
+    entries = []
+    if not allocates:
+        return entries
+    for allocate in allocates:
+        entry = allocate.get_json()
+        entries.append(entry)
+    return entries
+
+def get_allocates_by_staff(staff_id):
+    allocates = Allocation.query.filter_by(staff_id=staff_id).all()
+    if not allocates:
+        return []
+    return allocates
+
+def get_allocates_by_staff_json(staff_id):
+    allocates = Allocation.query.filter_by(staff_id=staff_id).all()
+    entries = []
+    if not allocates:
+        return entries
+    for allocate in allocates:
+        entry = allocate.get_json()
+        entries.append(entry)
+    return entries
+
+def get_allocates_by_role(role):
+    allocates = Allocation.query.filter_by(role=role).all()
+    if not allocates:
+        return []
+    return allocates
 
 def get_allocate(id):
-    return Allocation.query.get(id)
+    allocation = Allocation.query.get(id)
+    if not allocation:
+        return None
+    return allocation
 
-def delete_allocate(id):
-    allocate = get_allocate(id)
-    if allocate:
-        db.session.delete(allocate)
-        db.session.commit()
+def delete_allocate(allocation_id):
+    allocation = get_allocate(allocation_id)
+    if allocation:
+        db.session.delete(allocation)
+        db.session.commit()  # Make sure changes are committed to the database
         return True
     return False

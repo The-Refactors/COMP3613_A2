@@ -1,13 +1,27 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
+from sqlalchemy.orm import validates
+from sqlalchemy import CheckConstraint
 
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username =  db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
-    role = db.Column(db.String(50), nullable=False, default='admin')
+    fname = db.Column(db.String(20))
+    lname = db.Column(db.String(20))
+    position = db.Column(db.String(50), nullable=False, default='admin')
     type = db.Column(db.String(50))
+
+    __table_args__ = (
+        CheckConstraint("position IN ('admin', 'staff')", name='check_position'),
+    )
+
+    @validates('position')
+    def validate_position(self, key, position):
+        if position not in ['admin', 'staff']:
+            raise ValueError("Position must be 'admin' or 'staff'")
+        return position
 
     __mapper_args__ = {
         'polymorphic_identity': 'user',
@@ -22,7 +36,9 @@ class User(db.Model):
         return{
             'id': self.id,
             'username': self.username,
-            'role': self.role
+            'fname': self.fname,
+            'lname': self.lname,
+            'position': self.position
         }
 
     def set_password(self, password):
@@ -47,7 +63,7 @@ class Staff(User):
     __mapper_args__ = {
         'polymorphic_identity': 'staff'
     }
-    
-    def __init__(self, username, password, role):
+
+    def __init__(self, username, password, position):
         super().__init__(username, password)
-        self.role = role
+        self.position = position

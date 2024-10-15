@@ -7,10 +7,44 @@ from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
-    jwt_required
+    update_user_name
 )
 
+
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
+
+@user_views.route('/usercreate', methods=['GET'])
+@jwt_required()
+def get_create_user_view():
+    return jsonify({'message':'User at user creation page'}), 200
+
+# Route to create a new user
+@user_views.route('/usercreate', methods=['POST'])
+@jwt_required()
+def create_new_user():
+    data = request.json
+    check = create_user(data.get('username'), data.get('password'), data.get('position'))
+    if check:
+        name = (data.get('fname'), data.get('lname'))
+        update_user_name(check.id, name)
+        return jsonify({'message': 'User created successfully.', 'userId': check.id}), 201
+    else:
+        return jsonify({'message': 'User could not be created.'}), 400
+
+@user_views.route('/useredit', methods=['GET'])
+@jwt_required()
+def get_edit_user_view():
+    return jsonify({'message':'User at user edit page'}), 200
+
+@user_views.route('/useredit/<int:id>', methods=['GET'])
+@jwt_required()
+def get_edit_specific_user_view(id):
+    user = get_single_user_json(id)
+    allocations = get_allocates_by_staff_json(id)
+    courses = get_staff_courses(id)
+    return jsonify(user, allocations, courses), 200
+    # return jsonify({'message':'User at course edit page for particular course', 'courseId': course.id}), 200
+
 
 @user_views.route('/users', methods=['GET'])
 def get_user_page():
