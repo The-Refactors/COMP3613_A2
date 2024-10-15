@@ -80,6 +80,14 @@ def update_user(id, username):
         user.username = username
         db.session.add(user)
         db.session.commit()
-        return True
-    return False
-    
+        return user
+    return None
+
+def get_staff_courses(staff_id):
+    staff = User.query.filter_by(id=staff_id).first()
+    entries = []
+    if not staff:
+        return None
+    for entry in staff.courses:
+        entries.append(entry.get_json())
+    return entries

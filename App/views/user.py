@@ -7,9 +7,14 @@ from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
-    update_user_name
+    update_user_name,
+    get_single_user_json,
+    get_allocates_by_staff_json,
+    get_staff_courses,
+    update_user,
+    get_course,
+    get_course_json
 )
-
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -42,8 +47,28 @@ def get_edit_specific_user_view(id):
     user = get_single_user_json(id)
     allocations = get_allocates_by_staff_json(id)
     courses = get_staff_courses(id)
-    return jsonify(user, allocations, courses), 200
-    # return jsonify({'message':'User at course edit page for particular course', 'courseId': course.id}), 200
+    table_info = []
+    for allocate in allocations:
+        match = next(course for course in courses if course['id'] == allocate['courseId'])
+        table_info.append({
+            'courseId': allocate['courseId'],
+            'role': allocate['role'],
+            'coursecode': match['coursecode'],
+            'coursename': match['coursename']
+        })
+    return jsonify({'user': user, 'allocations': table_info}), 200
+
+@user_views.route('/useredit', methods=['PUT'])
+@jwt_required()
+def edit_user():
+    data = request.json
+    check = update_user(data.get('id'), data.get('username'))
+    name = (data.get('fname'), data.get('lname'))
+    if check:
+        update_user_name(data.get('id'), name)
+        return jsonify({'message': 'User edited successfully.', 'userId': check.id}), 201
+    else:
+        return jsonify({'message': 'User could not be edited.'}), 400
 
 
 @user_views.route('/users', methods=['GET'])
@@ -51,12 +76,14 @@ def get_user_page():
     users = get_all_users()
     return render_template('users.html', users=users)
 
+
 @user_views.route('/users', methods=['POST'])
 def create_user_action():
     data = request.form
     flash(f"User {data['username']} created!")
     create_user(data['username'], data['password'])
     return redirect(url_for('user_views.get_user_page'))
+
 
 @user_views.route('/api/users', methods=['GET'])
 def get_users_action():
