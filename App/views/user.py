@@ -64,7 +64,7 @@ def edit_user():
     name = (data.get('fname'), data.get('lname'))
     if check:
         update_user_name(data.get('id'), name)
-        return jsonify({'message': 'User edited successfully.', 'userId': check.id}), 201
+        return jsonify({'message': 'User edited successfully.', 'userId': check.id}), 200
     else:
         return jsonify({'message': 'User could not be edited.'}), 400
 

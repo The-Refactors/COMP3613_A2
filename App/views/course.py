@@ -64,7 +64,7 @@ def edit_course():
     data = request.json
     check = update_course(data.get('id'), data.get('courseCode'), data.get('courseName'), data.get('semester'), data.get('year'))
     if check:
-        return jsonify({'message': 'Course edited successfully.', 'courseId': check.id}), 201
+        return jsonify({'message': 'Course edited successfully.', 'courseId': check.id}), 200
     else:
         return jsonify({'message': 'Course could not be edited.'}), 400
 
