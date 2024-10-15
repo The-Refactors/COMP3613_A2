@@ -2,10 +2,13 @@ from App.models.course import *
 from App.database import db
 
 def create_course(courseCode, courseName, semester, year):
-    newcourse = Course(courseCode=courseCode, courseName=courseName, semester=semester, year=year)
-    db.session.add(newcourse)
-    db.session.commit()
-    return newcourse
+    course_check = Course.query.filter_by(courseCode=courseCode, courseName=courseName, semester=semester, year=year).first()
+    if not course_check:
+        newcourse = Course(courseCode=courseCode, courseName=courseName, semester=semester, year=year)
+        db.session.add(newcourse)
+        db.session.commit()
+        return newcourse
+    return False
 
 def get_course_by_name(courseName):
     course = Course.query.filter_by(courseName=courseName).first()

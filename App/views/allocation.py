@@ -7,36 +7,65 @@ from App.controllers import (
     get_all_allocates_json,
     get_allocates_by_staff,
     get_allocate,
-    delete_allocate
+    delete_allocate,
+    get_all_staff_json,
+    get_all_courses_json
 )
 
 # Create a Blueprint for the allocation routes
-allocation_views = Blueprint('allocation_views', __name__, url_prefix='/allocations')
+allocation_views = Blueprint('allocation_views', __name__, template_folder='../templates')
 
-# Route to create a new allocation
-@allocation_views.route('/', methods=['POST'])
-def create_allocation_view():
+
+@allocation_views.route('/allocationcreate', methods=['GET'])
+@jwt_required()
+def get_create_allocations_view():
+    return jsonify({'message':'User at allocation creation page'}), 200
+
+
+@allocation_views.route('/allocationcreate', methods=['POST'])
+@jwt_required()
+def create_new_allocation():
     data = request.json
-    course_id = data.get('course_id')
-    staff_id = data.get('staff_id')
-    
-    if not course_id or not staff_id:
-        return jsonify({'message': 'Course ID and Staff ID are required.'}), 400
-    
-    success = create_allocation(course_id, staff_id)
-    if success:
-        return jsonify({'message': 'Allocation created successfully.'}), 201
+    check = create_allocation(data.get('courseId'), data.get('staffId'), data.get('role'))
+    if check:
+        return jsonify({'message': 'Allocation created successfully.', 'ID': check.id}), 201
     else:
-        return jsonify({'message': 'Allocation already exists.'}), 409
+        return jsonify({'message': 'Allocation could not be created.'}), 400
 
-# Route to get all allocations
-@allocation_views.route('/', methods=['GET'])
+
+@allocation_views.route('/api/allocations', methods=['GET'])
+@jwt_required()
 def get_all_allocations_view():
     allocations = get_all_allocates_json()
     return jsonify(allocations), 200
 
+
+@allocation_views.route('/allocationedit', methods=['GET'])
+@jwt_required()
+def get_edit_allocation_view():
+    allocations = get_all_allocates_json()
+    courses = get_all_courses_json()
+    staff = get_all_staff_json()
+    table_info = []
+    for allocate in allocations:
+        match_course = next(course for course in courses if course['id'] == allocate['courseId'])
+        match_staff = next(user for user in staff if user['id'] == allocate['staffId'])
+        table_info.append({
+            'allocationId': allocate['id'],
+            'courseId': allocate['courseId'],
+            'staffId': allocate['id'],
+            'role': allocate['role'],
+            'coursecode': match_course['coursecode'],
+            'coursename': match_course['coursename'],
+            'semester': match_course['semester'],
+            'year': match_course['year'],
+            'fname': match_staff['fname'],
+            'lname': match_staff['lname']
+        })
+    return jsonify(table_info), 200
+
 # Route to get allocations by staff ID
-@allocation_views.route('/staff/<int:staff_id>', methods=['GET'])
+@allocation_views.route('/allocationcreate/<int:staff_id>', methods=['GET'])
 def get_allocations_by_staff_view(staff_id):
     allocations = get_allocates_by_staff(staff_id)
     if not allocations:
@@ -45,7 +74,7 @@ def get_allocations_by_staff_view(staff_id):
     return jsonify(allocations_json), 200
 
 # Route to get a single allocation by ID
-@allocation_views.route('/<int:id>', methods=['GET'])
+@allocation_views.route('/allocation/<int:id>', methods=['GET'])
 def get_allocation_view(id):
     allocation = get_allocate(id)
     if not allocation:
@@ -53,7 +82,7 @@ def get_allocation_view(id):
     return jsonify(allocation.get_json()), 200
 
 # Route to delete an allocation by ID
-@allocation_views.route('/<int:id>', methods=['DELETE'])
+@allocation_views.route('/allocation/<int:id>', methods=['DELETE'])
 def delete_allocation_view(id):
     success = delete_allocate(id)
     if success:

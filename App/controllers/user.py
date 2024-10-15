@@ -36,6 +36,13 @@ def get_all_staff():
         return None
     return staff
 
+def get_all_staff_json():
+    staff = Staff.query.all()
+    if not staff:
+        return []
+    staff = [staff.get_json() for staff in staff]
+    return staff
+
 def get_all_users_json():
     users = User.query.all()
     if not users:
