@@ -46,20 +46,21 @@ def get_edit_allocation_view():
     staff = get_all_staff_json()
     table_info = []
     for allocate in allocations:
-        match_course = next(course for course in courses if course['id'] == allocate['courseId'])
-        match_staff = next(user for user in staff if user['id'] == allocate['staffId'])
-        table_info.append({
-            'allocationId': allocate['id'],
-            'courseId': allocate['courseId'],
-            'staffId': allocate['id'],
-            'role': allocate['role'],
-            'coursecode': match_course['coursecode'],
-            'coursename': match_course['coursename'],
-            'semester': match_course['semester'],
-            'year': match_course['year'],
-            'fname': match_staff['fname'],
-            'lname': match_staff['lname']
-        })
+        match_course = next((course for course in courses if course['id'] == allocate['courseId']), None)
+        match_staff = next((user for user in staff if user['id'] == allocate['staffId']), None)
+        if match_course and match_staff:
+            table_info.append({
+                'allocationId': allocate['id'],
+                'courseId': allocate['courseId'],
+                'staffId': allocate['id'],
+                'role': allocate['role'],
+                'coursecode': match_course['coursecode'],
+                'coursename': match_course['coursename'],
+                'semester': match_course['semester'],
+                'year': match_course['year'],
+                'fname': match_staff['fname'],
+                'lname': match_staff['lname']
+            })
     return jsonify(table_info), 200
 
 # Route to delete an allocation by ID

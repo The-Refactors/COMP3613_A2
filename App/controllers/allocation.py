@@ -1,5 +1,6 @@
 from App.models.allocation import *
 from App.database import db
+import csv
 
 def create_allocation(course_id, staff_id, role):
     allocate_check = Allocation.query.filter_by(course_id=course_id, staff_id=staff_id, role=role).first()
@@ -66,3 +67,22 @@ def delete_allocate(allocation_id):
         db.session.commit()  # Make sure changes are committed to the database
         return True
     return False
+
+
+def parse_allocations():
+    with open('allocations.csv', newline='', encoding='utf-8') as csvfile:
+        csvreader = csv.reader(csvfile)
+        header = next(csvreader)
+
+        for row in csvreader:
+            course_id = row[0]
+            staff_id = row[1]
+            role = row[2]
+
+            allocation = Allocation(
+                course_id=course_id,
+                staff_id=staff_id,
+                role=role
+            )
+            db.session.add(allocation)
+        db.session.commit()

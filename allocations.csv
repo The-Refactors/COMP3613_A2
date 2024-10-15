@@ -1,0 +1,14 @@
+course_id,staff_id,role
+1,2,lecturer
+2,3,tutor
+3,4,teaching assistant
+1,3,tutor
+1,4,teaching assistant
+2,3,lecturer
+1,6,lecturer
+4,7,teaching assistant
+7,6,lecturer
+9,5,tutor
+12,2,tutor
+3,7,lecturer
+3,4,tutor

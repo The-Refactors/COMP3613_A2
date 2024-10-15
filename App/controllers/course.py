@@ -1,5 +1,6 @@
 from App.models.course import *
 from App.database import db
+import csv
 
 def create_course(courseCode, courseName, semester, year):
     course_check = Course.query.filter_by(courseCode=courseCode, courseName=courseName, semester=semester, year=year).first()
@@ -85,3 +86,24 @@ def update_course(course_id, code, name, semester, year):
         db.session.commit()
         return course  # Return the updated course object
     return None
+
+def parse_courses():
+    with open('courses.csv', newline='', encoding='utf-8') as csvfile:
+        csvreader = csv.reader(csvfile)
+        header = next(csvreader)
+
+        for row in csvreader:
+            courseCode = row[0]
+            courseName = row[1]
+            semester = row[2]
+            year = row[3]
+
+            course = Course(
+                courseCode=courseCode,
+                courseName=courseName,
+                semester=semester,
+                year=year
+            )
+            db.session.add(course)
+        db.session.commit()
+

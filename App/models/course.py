@@ -16,6 +16,10 @@ class Course(db.Model):
 
     @validates('semester')
     def validate_semester(self, key, semester):
+        try:
+            semester = int(semester)
+        except TypeError:
+            raise TypeError("Semester must be an integer")
         if semester not in [1, 2, 3]:
             raise ValueError("Semester must be 1, 2 or 3")
         return semester

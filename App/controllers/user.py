@@ -1,5 +1,6 @@
 from App.models.user import *
 from App.database import db
+import csv
 
 def create_user(username, password, position):
     if get_user_by_username(username):
@@ -98,3 +99,27 @@ def get_staff_courses(staff_id):
     for entry in staff.courses:
         entries.append(entry.get_json())
     return entries
+
+
+def parse_users():
+    with open('users.csv', newline='', encoding='utf-8') as csvfile:
+        csvreader = csv.reader(csvfile)
+        header = next(csvreader)
+
+        for row in csvreader:
+            username = row[0]
+            password = row[1]
+            position = row[2]
+            fname = row[3]
+            lname = row[4]
+
+            user = Staff(
+                username=username,
+                password=password,
+                position=position
+            )
+            db.session.add(user)
+            user = get_user_by_username(username)
+            name = (fname, lname)
+            update_user_name(user.id, name)
+        db.session.commit()

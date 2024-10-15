@@ -48,13 +48,14 @@ def get_edit_specific_course_view(id):
     staff = get_course_staff(id)
     table_info = []
     for allocate in allocations:
-        match = next(user for user in staff if user['id'] == allocate['staffId'])
-        table_info.append({
-            'staffId': allocate['staffId'],
-            'role': allocate['role'],
-            'fname': match['fname'],
-            'lname': match['lname']
-        })
+        match = next((user for user in staff if user['id'] == allocate['staffId']), None)
+        if match:
+            table_info.append({
+                'staffId': allocate['staffId'],
+                'role': allocate['role'],
+                'fname': match['fname'],
+                'lname': match['lname']
+            })
     return jsonify({'course': course, 'allocations': table_info}), 200
 
 @course_views.route('/courseedit', methods=['PUT'])

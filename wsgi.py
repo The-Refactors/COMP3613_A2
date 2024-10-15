@@ -2,13 +2,14 @@ import click, pytest, sys
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup
 
+from App import parse_users, parse_allocations
 from App.database import db, get_migrate
 from App.models import User, Course, Allocation
 
 from App.controllers import (create_user, get_all_users_json, get_all_users, initialize, create_course,
                              get_all_courses_json, get_all_staff, get_single_user_json, get_user, get_course,
                              create_allocation, get_all_allocates_json, get_user_by_username, delete_allocate,
-                             update_course, update_user, update_user_name)
+                             update_course, update_user, update_user_name, parse_courses, parse_users, parse_allocations)
 from App.database import get_migrate
 from App.main import create_app
 
@@ -22,6 +23,9 @@ migrate = get_migrate(app)
 @app.cli.command("init", help="Creates and initializes the database")
 def init():
     initialize()
+    parse_users()
+    parse_courses()
+    parse_allocations()
     print('database initialized')
 
 
