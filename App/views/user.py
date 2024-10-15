@@ -11,9 +11,7 @@ from App.controllers import (
     get_single_user_json,
     get_allocates_by_staff_json,
     get_staff_courses,
-    update_user,
-    get_course,
-    get_course_json
+    update_user
 )
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
