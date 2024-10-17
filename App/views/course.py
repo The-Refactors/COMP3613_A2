@@ -26,8 +26,12 @@ def get_create_course_view():
 @course_views.route('/coursecreate', methods=['POST'])
 @jwt_required()
 def create_new_course():
-    data = request.json
-    check = create_course(data.get('courseCode'), data.get('courseName'), data.get('semester'), data.get('year'))
+    data = request.form
+    coursecode = data['coursecode']
+    coursename = data['coursename']
+    semester = data['semester']
+    year = data['year']
+    check = create_course(coursecode, coursename, semester, year)
     if check:
         return jsonify({'message': 'Course created successfully.', 'courseId': check.id}), 201
     else:
@@ -61,8 +65,13 @@ def get_edit_specific_course_view(id):
 @course_views.route('/courseedit', methods=['PUT'])
 @jwt_required()
 def edit_course():
-    data = request.json
-    check = update_course(data.get('id'), data.get('courseCode'), data.get('courseName'), data.get('semester'), data.get('year'))
+    data = request.form
+    id = data['id']
+    coursecode = data['coursecode']
+    coursename = data['coursename']
+    semester = data['semester']
+    year = data['year']
+    check = update_course(id, coursecode, coursename, semester, year)
     if check:
         return jsonify({'message': 'Course edited successfully.', 'courseId': check.id}), 200
     else:

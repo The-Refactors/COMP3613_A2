@@ -25,10 +25,15 @@ def get_create_user_view():
 @user_views.route('/usercreate', methods=['POST'])
 @jwt_required()
 def create_new_user():
-    data = request.json
-    check = create_user(data.get('username'), data.get('password'), data.get('position'))
+    data = request.form
+    username = data['username']
+    password = data['password']
+    position = data['position']
+    fname = data['fname']
+    lname = data['lname']
+    check = create_user(username, password, position)
     if check:
-        name = (data.get('fname'), data.get('lname'))
+        name = (fname, lname)
         update_user_name(check.id, name)
         return jsonify({'message': 'User created successfully.', 'userId': check.id}), 201
     else:
@@ -59,11 +64,15 @@ def get_edit_specific_user_view(id):
 @user_views.route('/useredit', methods=['PUT'])
 @jwt_required()
 def edit_user():
-    data = request.json
-    check = update_user(data.get('id'), data.get('username'))
-    name = (data.get('fname'), data.get('lname'))
+    data = request.form
+    id = data['id']
+    username = data['username']
+    fname = data['fname']
+    lname = data['lname']
+    check = update_user(id, username)
+    name = (fname, lname)
     if check:
-        update_user_name(data.get('id'), name)
+        update_user_name(id, name)
         return jsonify({'message': 'User edited successfully.', 'userId': check.id}), 200
     else:
         return jsonify({'message': 'User could not be edited.'}), 400

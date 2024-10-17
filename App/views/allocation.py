@@ -23,8 +23,11 @@ def get_create_allocations_view():
 @allocation_views.route('/allocationcreate', methods=['POST'])
 @jwt_required()
 def create_new_allocation():
-    data = request.json
-    check = create_allocation(data.get('courseId'), data.get('staffId'), data.get('role'))
+    data = request.form
+    courseid = data['courseid']
+    staffid = data['staffid']
+    role = data['role']
+    check = create_allocation(courseid, staffid, role)
     if check:
         return jsonify({'message': 'Allocation created successfully.', 'ID': check.id}), 201
     else:
