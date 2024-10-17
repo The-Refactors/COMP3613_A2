@@ -2,13 +2,13 @@ from App.models.user import *
 from App.database import db
 import csv
 
-def create_user(username, password, position):
+def create_user(username, password, type):
     if get_user_by_username(username):
         return False
-    if position== 'admin':
-        newuser = Admin(username=username, password=password, position=position)
-    elif position == 'staff':
-        newuser = Staff(username=username, password=password, position=position)
+    if type == 'admin':
+        newuser = Admin(username=username, password=password)
+    elif type == 'staff':
+        newuser = Staff(username=username, password=password)
     else:
         return False
     db.session.add(newuser)
@@ -121,17 +121,17 @@ def parse_users():
         for row in csvreader:
             username = row[0]
             password = row[1]
-            position = row[2]
+            type = row[2]
             fname = row[3]
             lname = row[4]
 
-            user = Staff(
-                username=username,
-                password=password,
-                position=position
-            )
-            db.session.add(user)
-            user = get_user_by_username(username)
-            name = (fname, lname)
-            update_user_name(user.id, name)
+            if type == 'staff':
+                user = Staff(
+                    username=username,
+                    password=password
+                )
+                db.session.add(user)
+                user = get_user_by_username(username)
+                name = (fname, lname)
+                update_user_name(user.id, name)
         db.session.commit()

@@ -5,8 +5,8 @@ from sqlalchemy import CheckConstraint
 class Allocation(db.Model):
     __tablename__='allocations'
     id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)
+    courseid = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    staffid = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)
     role = db.Column(db.String(20), nullable=False)
 
     __table_args__ = (
@@ -19,15 +19,15 @@ class Allocation(db.Model):
             raise ValueError("Role must be 'lecturer', 'tutor' or 'teaching assistant'")
         return role
 
-    def __init__(self, course_id, staff_id, role):
-        self.course_id = course_id
-        self.staff_id = staff_id
+    def __init__(self, courseid, staffid, role):
+        self.courseid = courseid
+        self.staffid = staffid
         self.role = role
 
     def get_json(self):
         return{
             'id': self.id,
-            'courseId': self.course_id,
-            'staffId': self.staff_id,
+            'courseid': self.courseid,
+            'staffid': self.staffid,
             'role': self.role
         }

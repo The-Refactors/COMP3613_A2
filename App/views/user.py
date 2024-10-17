@@ -29,10 +29,10 @@ def create_new_user():
     data = request.form
     username = data['username']
     password = data['password']
-    position = data['position']
+    type = data['type']
     fname = data['fname']
     lname = data['lname']
-    check = create_user(username, password, position)
+    check = create_user(username, password, type)
     if check:
         name = (fname, lname)
         update_user_name(check.id, name)
@@ -53,9 +53,9 @@ def get_edit_specific_user_view(id):
     courses = get_staff_courses(id)
     table_info = []
     for allocate in allocations:
-        match = next(course for course in courses if course['id'] == allocate['courseId'])
+        match = next(course for course in courses if course['id'] == allocate['courseid'])
         table_info.append({
-            'courseId': allocate['courseId'],
+            'courseid': allocate['courseid'],
             'role': allocate['role'],
             'coursecode': match['coursecode'],
             'coursename': match['coursename']

@@ -44,15 +44,15 @@ user_cli = AppGroup('user', help='User object commands')
 @user_cli.command("create", help="Creates a user")
 @click.argument("username", default="rob")
 @click.argument("password", default="robpass")
-@click.argument("position", default="admin")
+@click.argument("type", default="admin")
 @click.option("--fname", default="firstname")
 @click.option("--lname", default="lastname")
-def create_user_command(username, password, position, fname, lname):
+def create_user_command(username, password, type, fname, lname):
     if get_user_by_username(username=username):
         print(f"{username} already exists")
         return
-    create_user(username, password, position)
-    print(f'{username} created with position {position}')
+    create_user(username, password, type)
+    print(f'{username} created with type {type}')
     user = get_user_by_username(username=username)
     name = [fname, lname]
     update_user_name(user.id, name)
@@ -79,7 +79,7 @@ def view_user_allocates_command():
     if not staff_member in staff_members:
         print("Invalid user ID. Exiting...")
         return
-    course_list = [[course.courseCode, course.courseName, course.year, course.semester] for course in
+    course_list = [[course.coursecode, course.coursename, course.year, course.semester] for course in
                    staff_member.courses]
     print(course_list)
 
@@ -111,8 +111,8 @@ course_cli = AppGroup('course', help='Course object commands')
 
 
 @course_cli.command("create", help="Creates a course")
-@click.argument("courseCode", default="COMP3613")
-@click.argument("courseName", default="Software Engineering II")
+@click.argument("coursecode", default="COMP3613")
+@click.argument("coursename", default="Software Engineering II")
 @click.argument("semester", default="1", type=int)
 @click.argument("year", default="2024", type=int)
 def create_course_command(coursecode, coursename, semester, year):
@@ -154,9 +154,9 @@ def update_course_command(id, code, name, semester, year):
         print("Invalid course ID. Exiting...")
         return
     if not code:
-        code = click.prompt("Please enter the new code", type=str, default=selected_course.courseCode)
+        code = click.prompt("Please enter the new code", type=str, default=selected_course.coursecode)
     if not name:
-        name = click.prompt("Please enter the new name", type=str, default=selected_course.courseName)
+        name = click.prompt("Please enter the new name", type=str, default=selected_course.coursename)
     if not semester:
         semester = click.prompt("Please enter the new semester", type=int, default=selected_course.semester)
     if not year:
@@ -212,9 +212,9 @@ def create_allocate_user_command(courseid, staffid, role):
 
     newallocate = create_allocation(courseid, staffid, role)
     if newallocate:
-        print(f'{selected_staff.username} allocated to {selected_course.courseCode} as {newallocate.role}')
+        print(f'{selected_staff.username} allocated to {selected_course.coursecode} as {newallocate.role}')
     else:
-        print(f'{selected_staff.username} was not allocated to {selected_course.courseCode} as {newallocate.role}')
+        print(f'{selected_staff.username} was not allocated to {selected_course.coursecode} as {newallocate.role}')
 
 
 @allocate_cli.command("list", help="Lists allocations in the database")

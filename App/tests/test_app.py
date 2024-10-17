@@ -37,8 +37,8 @@ class CourseUnitTests(unittest.TestCase):
     # Test to create a new course with specific attributes
     def test_new_course(self):
         course = Course("CS101", "Intro to CS", 1, 2024)
-        assert course.courseCode == "CS101"
-        assert course.courseName == "Intro to CS"
+        assert course.coursecode == "CS101"
+        assert course.coursename == "Intro to CS"
         assert course.semester == 1
         assert course.year == 2024
 
@@ -59,8 +59,8 @@ class AllocationUnitTests(unittest.TestCase):
     # Test to create a new allocation
     def test_new_allocation(self):
         allocation = Allocation(1, 2, 'lecturer')
-        assert allocation.course_id == 1
-        assert allocation.staff_id == 2
+        assert allocation.courseid == 1
+        assert allocation.staffid == 2
         assert allocation.role == "lecturer"
 
     # Test to ensure json format shows all attributes correctly for allocation
@@ -69,8 +69,8 @@ class AllocationUnitTests(unittest.TestCase):
         allocation_json = allocation.get_json()
         self.assertDictEqual(allocation_json, {
             "id": None,
-            "courseId": 1,
-            "staffId": 2,
+            "courseid": 1,
+            "staffid": 2,
             "role": "lecturer"
         })
 
@@ -78,37 +78,37 @@ class UserUnitTests(unittest.TestCase):
 
     # Test to create a new admin user
     def test_new_user_admin(self):
-        user = Admin('tom', 'tompass', 'admin')
+        user = Admin('tom', 'tompass')
         assert user.username == 'tom'
         assert user.type == 'admin'
 
     # Test to create a new staff user
     def test_new_user_staff(self):
-        user = Staff('tom', 'tompass', 'staff')
+        user = Staff('tom', 'tompass')
         assert user.username == 'tom'
         assert user.type == 'staff'
 
     # Test to ensure json format shows all attributes correctly for user
     def test_get_json(self):
-        user = Admin('cam', 'campass', 'admin')
+        user = Admin('cam', 'campass')
         user_json = user.get_json()
         self.assertDictEqual(user_json, {
             "id": None,
             "username": "cam",
             "fname": None,
             "lname": None,
-            "position": 'admin'
+            "type": 'admin'
         })
 
     # Test to ensure passwords are hashed
     def test_hashed_password(self):
-        user = Staff('meg', 'megpass', 'staff')
+        user = Staff('meg', 'megpass')
         user.set_password('newpass')
         assert user.password != 'newpass'
 
     # Test to ensure passwords are checked correctly despite hashing
     def test_check_password(self):
-        user = Staff('tim', 'timpass', 'staff')
+        user = Staff('tim', 'timpass')
         check = user.check_password('timpass')
         assert check == True
 
@@ -131,13 +131,13 @@ class CourseIntegrationTests(unittest.TestCase):
     def test_create_course(self):
         create_course("CS101", "Data Structures", 1, 2024)
         course = get_course(1)
-        assert course.courseCode == "CS101"
-        assert course.courseName == "Data Structures"
+        assert course.coursecode == "CS101"
+        assert course.coursename == "Data Structures"
 
     # def test_get_course_by_code(self):
     #     course = create_course("CS103", "Algorithms", 2, 2025)
     #     fetched_course = get_course_by_code("CS103")
-    #     assert fetched_course.courseName == "Algorithms"
+    #     assert fetched_course.coursename == "Algorithms"
 
     # Test to check retrieval of courses is correct
     def test_get_all_courses_json(self):
@@ -149,7 +149,7 @@ class CourseIntegrationTests(unittest.TestCase):
     def test_update_course(self):
         course = create_course("CS102", "Operating Systems", 1, 2024)
         updated_course = update_course(course.id, "CS102","Advanced OS", 1, 2024)
-        assert updated_course.courseName == "Advanced OS"
+        assert updated_course.coursename == "Advanced OS"
 
 
 class AllocationIntegrationTests(unittest.TestCase):
@@ -161,8 +161,8 @@ class AllocationIntegrationTests(unittest.TestCase):
         create_allocation(course.id, staff.id, 'lecturer').get_json()
         result = get_allocate(1)
         assert result.id == 1
-        assert result.course_id == 1
-        assert result.staff_id == 1
+        assert result.courseid == 1
+        assert result.staffid == 1
         assert result.role == "lecturer"
 
     # Test to check retrieval of allocations is correct

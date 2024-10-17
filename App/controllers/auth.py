@@ -12,7 +12,7 @@ def login(username, password):
 def setup_jwt(app):
   jwt = JWTManager(app)
 
-  # configure's flask jwt to resolve get_current_identity() to the corresponding user's ID
+  # configures flask jwt to resolve get_current_identity() to the corresponding user's ID
   @jwt.user_identity_loader
   def user_identity_lookup(identity):
     user = User.query.filter_by(username=identity).one_or_none()

@@ -2,35 +2,35 @@ from App.models.course import *
 from App.database import db
 import csv
 
-def create_course(courseCode, courseName, semester, year):
-    course_check = Course.query.filter_by(courseCode=courseCode, courseName=courseName, semester=semester, year=year).first()
+def create_course(coursecode, coursename, semester, year):
+    course_check = Course.query.filter_by(coursecode=coursecode, coursename=coursename, semester=semester, year=year).first()
     if not course_check:
-        newcourse = Course(courseCode=courseCode, courseName=courseName, semester=semester, year=year)
+        newcourse = Course(coursecode=coursecode, coursename=coursename, semester=semester, year=year)
         db.session.add(newcourse)
         db.session.commit()
         return newcourse
     return False
 
-# def get_course_by_name(courseName):
-#     course = Course.query.filter_by(courseName=courseName).first()
+# def get_course_by_name(coursename):
+#     course = Course.query.filter_by(coursename=coursename).first()
 #     if not course:
 #         return None
 #     return course
 #
-# def get_course_by_code(courseCode):
-#     course = Course.query.filter_by(courseCode=courseCode).first()
+# def get_course_by_code(coursecode):
+#     course = Course.query.filter_by(coursecode=coursecode).first()
 #     if not course:
 #         return None
 #     return course
 #
-# def get_courses_by_name(courseName):
-#     courses = Course.query.filter_by(courseName=courseName).all()
+# def get_courses_by_name(coursename):
+#     courses = Course.query.filter_by(coursename=coursename).all()
 #     if not courses:
 #         return None
 #     return courses
 #
-# def get_courses_by_code(courseCode):
-#     courses = Course.query.filter_by(courseCode=courseCode).all()
+# def get_courses_by_code(coursecode):
+#     courses = Course.query.filter_by(coursecode=coursecode).all()
 #     if not courses:
 #         return None
 #     return courses
@@ -78,8 +78,8 @@ def get_all_courses_json():
 def update_course(course_id, code, name, semester, year):
     course = get_course(course_id)
     if course:
-        course.courseCode = code
-        course.courseName = name
+        course.coursecode = code
+        course.coursename = name
         course.semester = semester
         course.year = year
         db.session.add(course)
@@ -93,14 +93,14 @@ def parse_courses():
         header = next(csvreader)
 
         for row in csvreader:
-            courseCode = row[0]
-            courseName = row[1]
+            coursecode = row[0]
+            coursename = row[1]
             semester = row[2]
             year = row[3]
 
             course = Course(
-                courseCode=courseCode,
-                courseName=courseName,
+                coursecode=coursecode,
+                coursename=coursename,
                 semester=semester,
                 year=year
             )

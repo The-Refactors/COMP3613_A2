@@ -10,18 +10,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     fname = db.Column(db.String(20))
     lname = db.Column(db.String(20))
-    position = db.Column(db.String(50), nullable=False, default='admin')
     type = db.Column(db.String(50))
-
-    __table_args__ = (
-        CheckConstraint("position IN ('admin', 'staff')", name='check_position'),
-    )
-
-    @validates('position')
-    def validate_position(self, key, position):
-        if position not in ['admin', 'staff']:
-            raise ValueError("Position must be 'admin' or 'staff'")
-        return position
 
     __mapper_args__ = {
         'polymorphic_identity': 'user',
@@ -38,7 +27,7 @@ class User(db.Model):
             'username': self.username,
             'fname': self.fname,
             'lname': self.lname,
-            'position': self.position
+            'type': self.type
         }
 
     def set_password(self, password):
@@ -57,17 +46,9 @@ class Admin(User):
         'polymorphic_identity': 'admin'
     }
 
-    def __init__(self, username, password, position):
-        super().__init__(username, password)
-        self.position = position
-
 class Staff(User):
     __tablename__ = 'staff'
     id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     __mapper_args__ = {
         'polymorphic_identity': 'staff'
     }
-
-    def __init__(self, username, password, position):
-        super().__init__(username, password)
-        self.position = position

@@ -1,4 +1,4 @@
-username,password,position,fname,lname
+username,password,type,fname,lname
 amy,amypass,staff,amy,winehouse
 gary,garypass,staff,gary,busey
 rick,rickpass,staff,rick,roll

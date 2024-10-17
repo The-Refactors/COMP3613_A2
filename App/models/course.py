@@ -4,8 +4,8 @@ from sqlalchemy import CheckConstraint
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    courseCode = db.Column(db.String(100), nullable=False)
-    courseName = db.Column(db.String(100), nullable=False)
+    coursecode = db.Column(db.String(100), nullable=False)
+    coursename = db.Column(db.String(100), nullable=False)
     semester = db.Column(db.Integer, nullable=False)
     year = db.Column(db.Integer, nullable=False)
     staffs = db.relationship('Staff', secondary='allocations', backref='courses', lazy=True)
@@ -24,17 +24,17 @@ class Course(db.Model):
             raise ValueError("Semester must be 1, 2 or 3")
         return semester
 
-    def __init__(self, courseCode, courseName, semester, year):
-        self.courseCode = courseCode
-        self.courseName = courseName
+    def __init__(self, coursecode, coursename, semester, year):
+        self.coursecode = coursecode
+        self.coursename = coursename
         self.semester = semester
         self.year = year
 
     def get_json(self):
         return{
             'id': self.id,
-            'coursecode': self.courseCode,
-            'coursename': self.courseName,
+            'coursecode': self.coursecode,
+            'coursename': self.coursename,
             'semester': self.semester,
             'year': self.year
         }

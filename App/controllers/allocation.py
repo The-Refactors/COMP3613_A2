@@ -2,10 +2,10 @@ from App.models.allocation import *
 from App.database import db
 import csv
 
-def create_allocation(course_id, staff_id, role):
-    allocate_check = Allocation.query.filter_by(course_id=course_id, staff_id=staff_id, role=role).first()
+def create_allocation(courseid, staffid, role):
+    allocate_check = Allocation.query.filter_by(courseid=courseid, staffid=staffid, role=role).first()
     if not allocate_check:
-        newallocation = Allocation(course_id=course_id, staff_id=staff_id, role=role)
+        newallocation = Allocation(courseid=courseid, staffid=staffid, role=role)
         db.session.add(newallocation)
         db.session.commit()
         return newallocation
@@ -18,12 +18,12 @@ def get_all_allocates_json():
     allocates = [allocate.get_json() for allocate in allocates]
     return allocates
 
-# def get_allocates_by_course(course_id):
-#     allocates = Allocation.query.filter_by(course_id=course_id).all()
+# def get_allocates_by_course(courseid):
+#     allocates = Allocation.query.filter_by(courseid=courseid).all()
 #     return allocates
 
-def get_allocates_by_course_json(course_id):
-    allocates = Allocation.query.filter_by(course_id=course_id).all()
+def get_allocates_by_course_json(courseid):
+    allocates = Allocation.query.filter_by(courseid=courseid).all()
     entries = []
     if not allocates:
         return entries
@@ -32,14 +32,14 @@ def get_allocates_by_course_json(course_id):
         entries.append(entry)
     return entries
 
-def get_allocates_by_staff(staff_id):
-    allocates = Allocation.query.filter_by(staff_id=staff_id).all()
+def get_allocates_by_staff(staffid):
+    allocates = Allocation.query.filter_by(staffid=staffid).all()
     if not allocates:
         return []
     return allocates
 
-def get_allocates_by_staff_json(staff_id):
-    allocates = Allocation.query.filter_by(staff_id=staff_id).all()
+def get_allocates_by_staff_json(staffid):
+    allocates = Allocation.query.filter_by(staffid=staffid).all()
     entries = []
     if not allocates:
         return entries
@@ -75,13 +75,13 @@ def parse_allocations():
         header = next(csvreader)
 
         for row in csvreader:
-            course_id = row[0]
-            staff_id = row[1]
+            courseid = row[0]
+            staffid = row[1]
             role = row[2]
 
             allocation = Allocation(
-                course_id=course_id,
-                staff_id=staff_id,
+                courseid=courseid,
+                staffid=staffid,
                 role=role
             )
             db.session.add(allocation)

@@ -52,10 +52,10 @@ def get_edit_specific_course_view(id):
     staff = get_course_staff(id)
     table_info = []
     for allocate in allocations:
-        match = next((user for user in staff if user['id'] == allocate['staffId']), None)
+        match = next((user for user in staff if user['id'] == allocate['staffid']), None)
         if match:
             table_info.append({
-                'staffId': allocate['staffId'],
+                'staffid': allocate['staffid'],
                 'role': allocate['role'],
                 'fname': match['fname'],
                 'lname': match['lname']
