@@ -57,6 +57,10 @@ class Admin(User):
         'polymorphic_identity': 'admin'
     }
 
+    def __init__(self, username, password, position):
+        super().__init__(username, password)
+        self.position = position
+
 class Staff(User):
     __tablename__ = 'staff'
     id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)

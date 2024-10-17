@@ -11,7 +11,8 @@ from App.controllers import (
     get_single_user_json,
     get_allocates_by_staff_json,
     get_staff_courses,
-    update_user
+    update_user,
+    update_user_password
 )
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
@@ -66,6 +67,10 @@ def get_edit_specific_user_view(id):
 def edit_user():
     data = request.form
     id = data['id']
+    password = request.form.get('password')
+    pass_flag = False
+    if password:
+        pass_flag = update_user_password(id, password)
     username = data['username']
     fname = data['fname']
     lname = data['lname']
@@ -73,7 +78,9 @@ def edit_user():
     name = (fname, lname)
     if check:
         update_user_name(id, name)
-        return jsonify({'message': 'User edited successfully.', 'userId': check.id}), 200
+        if pass_flag:
+            return jsonify({'message': 'User info and password edited successfully.'}), 200
+        return jsonify({'message': 'User info edited successfully.'}), 200
     else:
         return jsonify({'message': 'User could not be edited.'}), 400
 

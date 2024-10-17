@@ -11,41 +11,41 @@ def create_course(courseCode, courseName, semester, year):
         return newcourse
     return False
 
-def get_course_by_name(courseName):
-    course = Course.query.filter_by(courseName=courseName).first()
-    if not course:
-        return None
-    return course
-
-def get_course_by_code(courseCode):
-    course = Course.query.filter_by(courseCode=courseCode).first()
-    if not course:
-        return None
-    return course
-
-def get_courses_by_name(courseName):
-    courses = Course.query.filter_by(courseName=courseName).all()
-    if not courses:
-        return None
-    return courses
-
-def get_courses_by_code(courseCode):
-    courses = Course.query.filter_by(courseCode=courseCode).all()
-    if not courses:
-        return None
-    return courses
-
-def get_courses_by_semester(semester):
-    courses = Course.query.filter_by(semester=semester).all()
-    if not courses:
-        return None
-    return courses
-
-def get_courses_by_year(year):
-    courses = Course.query.filter_by(year=year).all()
-    if not courses:
-        return None
-    return courses
+# def get_course_by_name(courseName):
+#     course = Course.query.filter_by(courseName=courseName).first()
+#     if not course:
+#         return None
+#     return course
+#
+# def get_course_by_code(courseCode):
+#     course = Course.query.filter_by(courseCode=courseCode).first()
+#     if not course:
+#         return None
+#     return course
+#
+# def get_courses_by_name(courseName):
+#     courses = Course.query.filter_by(courseName=courseName).all()
+#     if not courses:
+#         return None
+#     return courses
+#
+# def get_courses_by_code(courseCode):
+#     courses = Course.query.filter_by(courseCode=courseCode).all()
+#     if not courses:
+#         return None
+#     return courses
+#
+# def get_courses_by_semester(semester):
+#     courses = Course.query.filter_by(semester=semester).all()
+#     if not courses:
+#         return None
+#     return courses
+#
+# def get_courses_by_year(year):
+#     courses = Course.query.filter_by(year=year).all()
+#     if not courses:
+#         return None
+#     return courses
 
 def get_course(course_id):
     course = Course.query.filter_by(id=course_id).first()

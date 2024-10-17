@@ -6,9 +6,11 @@ def create_user(username, password, position):
     if get_user_by_username(username):
         return False
     if position== 'admin':
-        newuser = Admin(username=username, password=password)
-    else:
+        newuser = Admin(username=username, password=password, position=position)
+    elif position == 'staff':
         newuser = Staff(username=username, password=password, position=position)
+    else:
+        return False
     db.session.add(newuser)
     db.session.commit()
     return newuser
@@ -80,6 +82,16 @@ def update_user_name(user_id, name):
             flag = update_user_fname(user, fname)
         if lname:
             flag = update_user_lname(user, lname)
+    return flag
+
+def update_user_password(id, password):
+    user = get_user(id)
+    flag = False
+    if user:
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        flag = user.check_password(password)
     return flag
 
 def update_user(id, username):

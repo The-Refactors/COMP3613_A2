@@ -18,9 +18,9 @@ def get_all_allocates_json():
     allocates = [allocate.get_json() for allocate in allocates]
     return allocates
 
-def get_allocates_by_course(course_id):
-    allocates = Allocation.query.filter_by(course_id=course_id).all()
-    return allocates
+# def get_allocates_by_course(course_id):
+#     allocates = Allocation.query.filter_by(course_id=course_id).all()
+#     return allocates
 
 def get_allocates_by_course_json(course_id):
     allocates = Allocation.query.filter_by(course_id=course_id).all()
@@ -48,11 +48,11 @@ def get_allocates_by_staff_json(staff_id):
         entries.append(entry)
     return entries
 
-def get_allocates_by_role(role):
-    allocates = Allocation.query.filter_by(role=role).all()
-    if not allocates:
-        return []
-    return allocates
+# def get_allocates_by_role(role):
+#     allocates = Allocation.query.filter_by(role=role).all()
+#     if not allocates:
+#         return []
+#     return allocates
 
 def get_allocate(id):
     allocation = Allocation.query.get(id)
