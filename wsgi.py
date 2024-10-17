@@ -79,8 +79,7 @@ def view_user_allocates_command():
     if not staff_member in staff_members:
         print("Invalid user ID. Exiting...")
         return
-    course_list = [[course.coursecode, course.coursename, course.year, course.semester] for course in
-                   staff_member.courses]
+    course_list = [[course.coursecode, course.coursename, course.year, course.semester] for course in staff_member.courses]
     print(course_list)
 
 
