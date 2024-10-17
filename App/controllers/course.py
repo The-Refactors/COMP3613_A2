@@ -2,6 +2,7 @@ from App.models.course import *
 from App.database import db
 import csv
 
+# create a course. return the new course, otherwise return false
 def create_course(coursecode, coursename, semester, year):
     course_check = Course.query.filter_by(coursecode=coursecode, coursename=coursename, semester=semester, year=year).first()
     if not course_check:
@@ -47,18 +48,21 @@ def create_course(coursecode, coursename, semester, year):
 #         return None
 #     return courses
 
+# get the course with specified id. return the found course, otherwise return None
 def get_course(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if not course:
         return None
     return course
 
+# get course with specified id in json format. return the found course dict, otherwise return none
 def get_course_json(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if not course:
         return None
     return course.get_json()
 
+# get the staff list associated with a course id. return the found staff list, otherwise return None
 def get_course_staff(course_id):
     course =Course.query.filter_by(id=course_id).first()
     entries = []
@@ -68,6 +72,7 @@ def get_course_staff(course_id):
         entries.append(entry.get_json())
     return entries
 
+# get all courses in db in json format. return a dict of entries, otherwise return empty dict
 def get_all_courses_json():
     courses = Course.query.all()
     if not courses:
@@ -75,6 +80,7 @@ def get_all_courses_json():
     courses = [course.get_json() for course in courses]
     return courses
 
+# update the course of given id with given info. return updated course object, otherwise return None
 def update_course(course_id, code, name, semester, year):
     course = get_course(course_id)
     if course:
@@ -87,6 +93,7 @@ def update_course(course_id, code, name, semester, year):
         return course  # Return the updated course object
     return None
 
+# load the db with courses parsed from specified csv file
 def parse_courses():
     with open('courses.csv', newline='', encoding='utf-8') as csvfile:
         csvreader = csv.reader(csvfile)

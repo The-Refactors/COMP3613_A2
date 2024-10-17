@@ -15,14 +15,14 @@ from App.controllers import (
 # Create a Blueprint for the course routes
 course_views = Blueprint('course_views', __name__, template_folder='../templates')
 
-
+# Route to retrieve page for creating a new course
 @course_views.route('/coursecreate', methods=['GET'])
 @jwt_required()
 def get_create_course_view():
     return jsonify({'message':'User at course creation page'}), 200
 
 
-# Route to create a new course
+# Route to create a new course with inputted form data
 @course_views.route('/coursecreate', methods=['POST'])
 @jwt_required()
 def create_new_course():
@@ -37,13 +37,13 @@ def create_new_course():
     else:
         return jsonify({'message': 'Course could not be created.'}), 400
 
-
+# Route to retrieve page for updating a course's info
 @course_views.route('/courseedit', methods=['GET'])
 @jwt_required()
 def get_edit_course_view():
     return jsonify({'message':'User at course edit page'}), 200
 
-
+# Route to retrieve page for updating a specified courseid's info
 @course_views.route('/courseedit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_course_view(id):
@@ -62,6 +62,7 @@ def get_edit_specific_course_view(id):
             })
     return jsonify({'course': course, 'allocations': table_info}), 200
 
+# Route to update a course's info with inputted form data
 @course_views.route('/courseedit', methods=['PUT'])
 @jwt_required()
 def edit_course():
@@ -78,7 +79,7 @@ def edit_course():
         return jsonify({'message': 'Course could not be edited.'}), 400
 
 
-# Route to get all courses
+# Route to retrieve page for a list of all courses in db in json format
 @course_views.route('/api/courses', methods=['GET'])
 @jwt_required()
 def get_all_courses_view():

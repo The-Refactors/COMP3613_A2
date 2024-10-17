@@ -13,13 +13,13 @@ from App.controllers import (
 # Create a Blueprint for the allocation routes
 allocation_views = Blueprint('allocation_views', __name__, template_folder='../templates')
 
-
+# Route to retrieve page for creating allocations
 @allocation_views.route('/allocationcreate', methods=['GET'])
 @jwt_required()
 def get_create_allocations_view():
     return jsonify({'message':'User at allocation creation page'}), 200
 
-
+# Route to page to create an allocation with inputted form data
 @allocation_views.route('/allocationcreate', methods=['POST'])
 @jwt_required()
 def create_new_allocation():
@@ -33,14 +33,14 @@ def create_new_allocation():
     else:
         return jsonify({'message': 'Allocation could not be created.'}), 400
 
-
+# Route to retrieve page for a list of all allocations in db in json format
 @allocation_views.route('/api/allocations', methods=['GET'])
 @jwt_required()
 def get_all_allocations_view():
     allocations = get_all_allocates_json()
     return jsonify(allocations), 200
 
-
+# Route to retrieve page for listing all allocation info
 @allocation_views.route('/allocationedit', methods=['GET'])
 @jwt_required()
 def get_edit_allocation_view():

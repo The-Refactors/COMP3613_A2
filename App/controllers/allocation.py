@@ -2,6 +2,7 @@ from App.models.allocation import *
 from App.database import db
 import csv
 
+# create an allocation. return the new allocation, otherwise return false
 def create_allocation(courseid, staffid, role):
     allocate_check = Allocation.query.filter_by(courseid=courseid, staffid=staffid, role=role).first()
     if not allocate_check:
@@ -11,6 +12,7 @@ def create_allocation(courseid, staffid, role):
         return newallocation
     return False
 
+# get all allocations in json format. return dict of all allocations, otherwise return empty dict
 def get_all_allocates_json():
     allocates = Allocation.query.all()
     if not allocates:
@@ -22,6 +24,7 @@ def get_all_allocates_json():
 #     allocates = Allocation.query.filter_by(courseid=courseid).all()
 #     return allocates
 
+# get all allocations with specified courseid in json format. return dict of entries, otherwise return empty dict
 def get_allocates_by_course_json(courseid):
     allocates = Allocation.query.filter_by(courseid=courseid).all()
     entries = []
@@ -32,12 +35,14 @@ def get_allocates_by_course_json(courseid):
         entries.append(entry)
     return entries
 
+# get all allocations with specified staffid. return dict of entries, otherwise return empty dict
 def get_allocates_by_staff(staffid):
     allocates = Allocation.query.filter_by(staffid=staffid).all()
     if not allocates:
         return []
     return allocates
 
+# get all allocations with specified staffid in json format. return dict of entries, otherwise return empty dict
 def get_allocates_by_staff_json(staffid):
     allocates = Allocation.query.filter_by(staffid=staffid).all()
     entries = []
@@ -54,12 +59,14 @@ def get_allocates_by_staff_json(staffid):
 #         return []
 #     return allocates
 
+# get the allocation with specified id. return found allocation object, otherwise return None
 def get_allocate(id):
     allocation = Allocation.query.get(id)
     if not allocation:
         return None
     return allocation
 
+# delete the allocation with specified id from db. return True if deleted, otherwise return False
 def delete_allocate(allocation_id):
     allocation = get_allocate(allocation_id)
     if allocation:
@@ -68,7 +75,7 @@ def delete_allocate(allocation_id):
         return True
     return False
 
-
+# load the db with allocations parsed from specified csv file
 def parse_allocations():
     with open('allocations.csv', newline='', encoding='utf-8') as csvfile:
         csvreader = csv.reader(csvfile)

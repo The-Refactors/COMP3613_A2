@@ -17,12 +17,13 @@ from App.controllers import (
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
+# Route to retrieve page for creating a new user
 @user_views.route('/usercreate', methods=['GET'])
 @jwt_required()
 def get_create_user_view():
     return jsonify({'message':'User at user creation page'}), 200
 
-# Route to create a new user
+# Route to create a new user with inputted form data
 @user_views.route('/usercreate', methods=['POST'])
 @jwt_required()
 def create_new_user():
@@ -40,11 +41,13 @@ def create_new_user():
     else:
         return jsonify({'message': 'User could not be created.'}), 400
 
+# Route to retrieve page for updating a user's info
 @user_views.route('/useredit', methods=['GET'])
 @jwt_required()
 def get_edit_user_view():
     return jsonify({'message':'User at user edit page'}), 200
 
+# Route to retrieve page for updating a specified userid's info
 @user_views.route('/useredit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_user_view(id):
@@ -62,6 +65,7 @@ def get_edit_specific_user_view(id):
         })
     return jsonify({'user': user, 'allocations': table_info}), 200
 
+# Route to update a user's info with inputted form data
 @user_views.route('/useredit', methods=['PUT'])
 @jwt_required()
 def edit_user():
