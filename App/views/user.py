@@ -37,7 +37,7 @@ def create_new_user():
     if check:
         name = (fname, lname)
         update_user_name(check.id, name)
-        return jsonify({'message': 'User created successfully.', 'userId': check.id}), 201
+        return jsonify({'message': f'User created with id {check.id}'}), 201
     else:
         return jsonify({'message': 'User could not be created.'}), 400
 
@@ -83,10 +83,10 @@ def edit_user():
     if check:
         update_user_name(id, name)
         if pass_flag:
-            return jsonify({'message': 'User info and password edited successfully.'}), 200
-        return jsonify({'message': 'User info edited successfully.'}), 200
+            return jsonify({'message': f'User {check.id} info and password edited successfully.'}), 200
+        return jsonify({'message': f'User {check.id} info edited successfully.'}), 200
     else:
-        return jsonify({'message': 'User could not be edited.'}), 400
+        return jsonify({'message': f'User {check.id} could not be edited.'}), 400
 
 
 @user_views.route('/users', methods=['GET'])

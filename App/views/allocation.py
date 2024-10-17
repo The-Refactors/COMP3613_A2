@@ -29,9 +29,9 @@ def create_new_allocation():
     role = data['role']
     check = create_allocation(courseid, staffid, role)
     if check:
-        return jsonify({'message': 'Allocation created successfully.', 'ID': check.id}), 201
+        return jsonify({'message': f'Allocation created with id {check.id}'}), 201
     else:
-        return jsonify({'message': 'Allocation could not be created.'}), 400
+        return jsonify({'message': 'Allocation could not be created'}), 400
 
 # Route to retrieve page for a list of all allocations in db in json format
 @allocation_views.route('/api/allocations', methods=['GET'])
@@ -72,5 +72,5 @@ def get_edit_allocation_view():
 def delete_allocation_view(id):
     success = delete_allocate(id)
     if success:
-        return jsonify({'message':'Allocation deleted successfully'}), 200
-    return jsonify({'message': 'Allocation not found'}), 404
+        return jsonify({'message': f'Allocation {id} deleted successfully'}), 200
+    return jsonify({'message': f'Allocation {id} not found'}), 404

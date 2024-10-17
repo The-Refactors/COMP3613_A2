@@ -33,7 +33,7 @@ def create_new_course():
     year = data['year']
     check = create_course(coursecode, coursename, semester, year)
     if check:
-        return jsonify({'message': 'Course created successfully.', 'courseId': check.id}), 201
+        return jsonify({'message': f'Course created with id {check.id}'}), 201
     else:
         return jsonify({'message': 'Course could not be created.'}), 400
 
@@ -74,9 +74,9 @@ def edit_course():
     year = data['year']
     check = update_course(id, coursecode, coursename, semester, year)
     if check:
-        return jsonify({'message': 'Course edited successfully.', 'courseId': check.id}), 200
+        return jsonify({'message': f'Course {check.id} edited successfully'}), 200
     else:
-        return jsonify({'message': 'Course could not be edited.'}), 400
+        return jsonify({'message': f'Course {check.id} could not be edited'}), 400
 
 
 # Route to retrieve page for a list of all courses in db in json format
