@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
-from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+from flask_jwt_extended import jwt_required, current_user as jwt_current_user, current_user
 
 from.index import index_views
 
 from App.controllers import (
+    verify_type_fail,
     create_user,
     get_all_users,
     get_all_users_json,
@@ -21,12 +22,18 @@ user_views = Blueprint('user_views', __name__, template_folder='../templates')
 @user_views.route('/usercreate', methods=['GET'])
 @jwt_required()
 def get_create_user_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     return jsonify({'message':'User at user creation page'}), 200
 
 # Route to create a new user with inputted form data
 @user_views.route('/usercreate', methods=['POST'])
 @jwt_required()
 def create_new_user():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     data = request.form
     username = data['username']
     password = data['password']
@@ -45,12 +52,18 @@ def create_new_user():
 @user_views.route('/useredit', methods=['GET'])
 @jwt_required()
 def get_edit_user_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     return jsonify({'message':'User at user edit page'}), 200
 
 # Route to retrieve page for updating a specified userid's info
 @user_views.route('/useredit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_user_view(id):
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     user = get_single_user_json(id)
     allocations = get_allocates_by_staff_json(id)
     courses = get_staff_courses(id)
@@ -69,6 +82,9 @@ def get_edit_specific_user_view(id):
 @user_views.route('/useredit', methods=['PUT'])
 @jwt_required()
 def edit_user():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     data = request.form
     id = data['id']
     password = request.form.get('password')
@@ -87,6 +103,29 @@ def edit_user():
         return jsonify({'message': f'User {check.id} info edited successfully.'}), 200
     else:
         return jsonify({'message': f'User {check.id} could not be edited.'}), 400
+
+# Route to update a user's password with inputted form data
+@user_views.route('/userpassedit/<int:id>', methods=['PUT'])
+@jwt_required()
+def edit_user_password(id):
+    if current_user.id != id:
+        return jsonify({'message': f'User {current_user.id} does not have access to this page'}), 403
+    password = request.form.get('password')
+    check = False
+    if password:
+        check = update_user_password(id, password)
+    if check:
+        return jsonify({'message': f'User {current_user.id} password edited successfully.'}), 200
+    else:
+        return jsonify({'message': f'User {current_user.id} password could not be edited.'}), 400
+
+# Route to update a user's password with inputted form data
+@user_views.route('/userpassedit/<int:id>', methods=['GET'])
+@jwt_required()
+def get_update_password_view(id):
+    if current_user.id != id:
+        return jsonify({'message': f'User {current_user.id} does not have access to this page'}), 403
+    return jsonify({'message': f'User {current_user.id} at password edit page.'}), 200
 
 
 @user_views.route('/users', methods=['GET'])

@@ -6,7 +6,8 @@ from.index import index_views
 
 from App.controllers import (
     login,
-    get_all_users
+    get_all_users,
+    get_user_by_username
 )
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
@@ -37,7 +38,11 @@ def login_action():
         flash('Bad username or password given'), 401
     else:
         flash('Login Successful')
-        response = redirect(url_for('home_views.home_page'))
+        user = get_user_by_username(data['username'])
+        if user.type == 'admin':
+            response = redirect(url_for('home_views.home_page'))
+        else:
+            response = redirect(url_for('home_views.staff_home_page', id=user.id))
         set_access_cookies(response, token) 
     return response
 

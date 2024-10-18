@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
-from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+from flask_jwt_extended import jwt_required, current_user as jwt_current_user, current_user
 
 from .index import index_views
 
 from App.controllers import (
+    verify_type_fail,
     create_course,
     get_all_courses_json,
     update_course,
@@ -19,6 +20,9 @@ course_views = Blueprint('course_views', __name__, template_folder='../templates
 @course_views.route('/coursecreate', methods=['GET'])
 @jwt_required()
 def get_create_course_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     return jsonify({'message':'User at course creation page'}), 200
 
 
@@ -26,6 +30,9 @@ def get_create_course_view():
 @course_views.route('/coursecreate', methods=['POST'])
 @jwt_required()
 def create_new_course():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     data = request.form
     coursecode = data['coursecode']
     coursename = data['coursename']
@@ -41,12 +48,18 @@ def create_new_course():
 @course_views.route('/courseedit', methods=['GET'])
 @jwt_required()
 def get_edit_course_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     return jsonify({'message':'User at course edit page'}), 200
 
 # Route to retrieve page for updating a specified courseid's info
 @course_views.route('/courseedit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_course_view(id):
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     course = get_course_json(id)
     allocations = get_allocates_by_course_json(id)
     staff = get_course_staff(id)
@@ -66,6 +79,9 @@ def get_edit_specific_course_view(id):
 @course_views.route('/courseedit', methods=['PUT'])
 @jwt_required()
 def edit_course():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     data = request.form
     id = data['id']
     coursecode = data['coursecode']
@@ -94,7 +110,7 @@ def get_staff_course_view(id):
                 'fname': match['fname'],
                 'lname': match['lname']
             })
-    return jsonify({'message': f'User at course {id} details page', 'allocations': table_info, 'course': course}), 200
+    return jsonify({'allocations': table_info, 'course': course}), 200
 
 # Route to retrieve page for a list of all courses in db in json format
 @course_views.route('/api/courses', methods=['GET'])

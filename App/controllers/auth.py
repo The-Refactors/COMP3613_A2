@@ -1,3 +1,4 @@
+from flask import jsonify
 from flask_jwt_extended import create_access_token, jwt_required, JWTManager, get_jwt_identity, verify_jwt_in_request
 
 from App.models import User
@@ -8,6 +9,10 @@ def login(username, password):
     return create_access_token(identity=username)
   return None
 
+def verify_type_fail(user, type):
+    if user.type != type:
+        return jsonify({'message': f'User {user.id} does not have access to this page'}), 403
+    return False
 
 def setup_jwt(app):
   jwt = JWTManager(app)

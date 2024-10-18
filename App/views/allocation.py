@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
-from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+from flask_jwt_extended import jwt_required, current_user as jwt_current_user, current_user
 
 from.index import index_views
 from App.controllers import (
+    verify_type_fail,
     create_allocation,
     get_all_allocates_json,
     delete_allocate,
@@ -17,12 +18,18 @@ allocation_views = Blueprint('allocation_views', __name__, template_folder='../t
 @allocation_views.route('/allocationcreate', methods=['GET'])
 @jwt_required()
 def get_create_allocations_view():
-    return jsonify({'message':'User at allocation creation page'}), 200
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
+    return jsonify({'message': f'User {current_user.id} at allocation creation page'}), 200
 
 # Route to page to create an allocation with inputted form data
 @allocation_views.route('/allocationcreate', methods=['POST'])
 @jwt_required()
 def create_new_allocation():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     data = request.form
     courseid = data['courseid']
     staffid = data['staffid']
@@ -37,6 +44,9 @@ def create_new_allocation():
 @allocation_views.route('/api/allocations', methods=['GET'])
 @jwt_required()
 def get_all_allocations_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     allocations = get_all_allocates_json()
     return jsonify(allocations), 200
 
@@ -44,6 +54,9 @@ def get_all_allocations_view():
 @allocation_views.route('/allocationedit', methods=['GET'])
 @jwt_required()
 def get_edit_allocation_view():
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     allocations = get_all_allocates_json()
     courses = get_all_courses_json()
     staff = get_all_staff_json()
@@ -70,6 +83,9 @@ def get_edit_allocation_view():
 @allocation_views.route('/allocationdelete/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_allocation_view(id):
+    verify = verify_type_fail(current_user, 'admin')
+    if verify:
+        return verify
     success = delete_allocate(id)
     if success:
         return jsonify({'message': f'Allocation {id} deleted successfully'}), 200
