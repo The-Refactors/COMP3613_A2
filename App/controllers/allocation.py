@@ -2,7 +2,7 @@ from App.models.allocation import *
 from App.database import db
 import csv
 
-# create an allocation. return the new allocation, otherwise return false
+# create an allocation. return the new allocation object, otherwise return false
 def create_allocation(courseid, staffid, role):
     allocate_check = Allocation.query.filter_by(courseid=courseid, staffid=staffid, role=role).first()
     if not allocate_check:

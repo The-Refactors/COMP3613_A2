@@ -2,7 +2,7 @@ from App.models.course import *
 from App.database import db
 import csv
 
-# create a course. return the new course, otherwise return false
+# create a course. return the new course object, otherwise return false
 def create_course(coursecode, coursename, semester, year):
     course_check = Course.query.filter_by(coursecode=coursecode, coursename=coursename, semester=semester, year=year).first()
     if not course_check:
@@ -48,14 +48,14 @@ def create_course(coursecode, coursename, semester, year):
 #         return None
 #     return courses
 
-# get the course with specified id. return the found course, otherwise return None
+# get the course with specified id. return the found course object, otherwise return None
 def get_course(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if not course:
         return None
     return course
 
-# get course with specified id in json format. return the found course dict, otherwise return none
+# get course with specified id in json format. return the found course dict, otherwise return None
 def get_course_json(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if not course:

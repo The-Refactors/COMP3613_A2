@@ -2,7 +2,7 @@ from App.models.user import *
 from App.database import db
 import csv
 
-# create a user. return the new user, otherwise return false
+# create a user. return the new user object, otherwise return false
 def create_user(username, password, type):
     if get_user_by_username(username):
         return False
@@ -82,7 +82,7 @@ def update_user_lname(user, lname):
     db.session.commit()
     return True
 
-# update the user of given id with given info. return True if updated, otherwise return False
+# update the fname and lname of given user id with given info. return True if updated, otherwise return False
 def update_user_name(user_id, name):
     user = get_user(user_id)
     flag = False
@@ -95,7 +95,7 @@ def update_user_name(user_id, name):
             flag = update_user_lname(user, lname)
     return flag
 
-# update the user of given id with given info. return True if updated, otherwise return False
+# update the password of given user id with given info. return True if updated, otherwise return False
 def update_user_password(id, password):
     user = get_user(id)
     flag = False
@@ -106,7 +106,7 @@ def update_user_password(id, password):
         flag = user.check_password(password)
     return flag
 
-# update the user of given id with given info. return True if updated, otherwise return False
+# update the username of given id with given info. return True if updated, otherwise return False
 def update_user(id, username):
     user = get_user(id)
     if user:
