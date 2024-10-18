@@ -20,9 +20,9 @@ course_views = Blueprint('course_views', __name__, template_folder='../templates
 @course_views.route('/coursecreate', methods=['GET'])
 @jwt_required()
 def get_create_course_view():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     return jsonify({'message':'User at course creation page'}), 200
 
 
@@ -30,9 +30,9 @@ def get_create_course_view():
 @course_views.route('/coursecreate', methods=['POST'])
 @jwt_required()
 def create_new_course():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     data = request.form
     coursecode = data['coursecode']
     coursename = data['coursename']
@@ -48,18 +48,18 @@ def create_new_course():
 @course_views.route('/courseedit', methods=['GET'])
 @jwt_required()
 def get_edit_course_view():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     return jsonify({'message':'User at course edit page'}), 200
 
 # Route to retrieve page for updating a specified courseid's info
 @course_views.route('/courseedit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_course_view(id):
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     course = get_course_json(id)
     allocations = get_allocates_by_course_json(id)
     staff = get_course_staff(id)
@@ -79,9 +79,9 @@ def get_edit_specific_course_view(id):
 @course_views.route('/courseedit', methods=['PUT'])
 @jwt_required()
 def edit_course():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     data = request.form
     id = data['id']
     coursecode = data['coursecode']

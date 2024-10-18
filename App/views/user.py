@@ -22,18 +22,18 @@ user_views = Blueprint('user_views', __name__, template_folder='../templates')
 @user_views.route('/usercreate', methods=['GET'])
 @jwt_required()
 def get_create_user_view():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     return jsonify({'message':'User at user creation page'}), 200
 
 # Route to create a new user with inputted form data
 @user_views.route('/usercreate', methods=['POST'])
 @jwt_required()
 def create_new_user():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     data = request.form
     username = data['username']
     password = data['password']
@@ -52,22 +52,24 @@ def create_new_user():
 @user_views.route('/useredit', methods=['GET'])
 @jwt_required()
 def get_edit_user_view():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     return jsonify({'message':'User at user edit page'}), 200
 
 # Route to retrieve page for updating a specified userid's info
 @user_views.route('/useredit/<int:id>', methods=['GET'])
 @jwt_required()
 def get_edit_specific_user_view(id):
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     user = get_single_user_json(id)
+    table_info = []
+    if user['type'] == 'admin':
+        return jsonify({'user': user, 'allocations': table_info}), 200
     allocations = get_allocates_by_staff_json(id)
     courses = get_staff_courses(id)
-    table_info = []
     for allocate in allocations:
         match = next(course for course in courses if course['id'] == allocate['courseid'])
         table_info.append({
@@ -82,9 +84,9 @@ def get_edit_specific_user_view(id):
 @user_views.route('/useredit', methods=['PUT'])
 @jwt_required()
 def edit_user():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     data = request.form
     id = data['id']
     password = request.form.get('password')

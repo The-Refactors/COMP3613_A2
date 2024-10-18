@@ -12,18 +12,18 @@ home_views = Blueprint('home_views', __name__, template_folder='../templates')
 @home_views.route('/home', methods=['GET'])
 @jwt_required()
 def home_page():
-    verify = verify_type_fail(current_user, 'admin')
-    if verify:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify:
+        return fail_verify
     return jsonify({'message': f'User {current_user.id} at home page'})
 
 
 @home_views.route('/staffhome/<int:id>', methods=['GET'])
 @jwt_required()
 def staff_home_page(id):
-    verify = verify_type_fail(current_user, 'admin')
-    if verify and not current_user.id == id:
-        return verify
+    fail_verify = verify_type_fail(current_user, 'admin')
+    if fail_verify and not current_user.id == id:
+        return fail_verify
     allocations = get_allocates_by_staff_json(id)
     courses = get_staff_courses(id)
     table_info = []
