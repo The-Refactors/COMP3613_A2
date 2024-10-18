@@ -35,7 +35,7 @@ def get_allocates_by_course_json(courseid):
         entries.append(entry)
     return entries
 
-# get all allocations with specified staffid. return dict of entries, otherwise return empty dict
+# get all allocations with specified staffid. return list of entries, otherwise return empty list
 def get_allocates_by_staff(staffid):
     allocates = Allocation.query.filter_by(staffid=staffid).all()
     if not allocates:
