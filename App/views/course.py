@@ -78,6 +78,23 @@ def edit_course():
     else:
         return jsonify({'message': f'Course {check.id} could not be edited'}), 400
 
+# Route to retrieve page for staff user course details
+@course_views.route('/staffcourse/<int:id>', methods=['GET'])
+@jwt_required()
+def get_staff_course_view(id):
+    course = get_course_json(id)
+    allocations = get_allocates_by_course_json(id)
+    staff = get_course_staff(id)
+    table_info = []
+    for allocate in allocations:
+        match = next((user for user in staff if user['id'] == allocate['staffid']), None)
+        if match:
+            table_info.append({
+                'role': allocate['role'],
+                'fname': match['fname'],
+                'lname': match['lname']
+            })
+    return jsonify({'message': f'User at course {id} details page', 'allocations': table_info, 'course': course}), 200
 
 # Route to retrieve page for a list of all courses in db in json format
 @course_views.route('/api/courses', methods=['GET'])
